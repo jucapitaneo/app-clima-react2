@@ -1,16 +1,62 @@
-# React + Vite
+# ClimaApp - App de Previsão do Tempo
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Um projeto moderno e eficiente para visualização do clima atual, construído com **React** e focado em uma arquitetura limpa, performance otimizada e uma experiência de usuário fluida.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Visão Geral do Projeto
 
-## React Compiler
+O **ClimaApp** é uma aplicação web de clima que permite ao usuário buscar a previsão do tempo atual de qualquer cidade, exibir um resumo claro das condições (temperatura e vento) e gerenciar uma lista de cidades favoritas com persistência local.
 
-The React Compiler is not enabled on this template. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Principais Funcionalidades
 
-## Expanding the ESLint configuration
+* **Busca de Clima por Cidade:** Pesquisa em tempo real usando a API de Geocoding.
+* **Exibição Resumida:** Cartão de resumo do clima atual (temperatura, vento e condição).
+* **Gerenciamento de Favoritos:** Adiciona cidades à lista de favoritos, armazenada localmente.
+* **Cache Inteligente:** Armazena resultados de busca localmente para evitar chamadas de API repetidas e aumentar a velocidade de carregamento (com expiração de 5 minutos).
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## Stack Tecnológica e Arquitetura
+
+Este projeto foi construído sobre uma fundação robusta de tecnologias modernas e uma arquitetura bem definida.
+
+### Componentização com Design Atômico
+
+Adotei a metodologia de **Design Atômico** para estruturar os componentes da aplicação, garantindo **reutilização, consistência** e **manutenibilidade** do código.
+
+| Nível | Componentes no Projeto | Descrição |
+| :---: | :---: | :--- |
+| **Átomos** | `InputText`, `ButtonPrimary` | Elementos básicos de UI, como botões e inputs, que não têm estado próprio ou lógica de domínio. |
+| **Moléculas** | `SearchBar`, `WeatherSummaryCard` | Grupos de Átomos trabalhando juntos, como a barra de busca (input + botão). |
+| **Organismos** | `WeatherPanel` | Seções complexas da interface, combinando Moléculas e Átomos, contendo a maior parte da lógica e estado da aplicação (busca, favoritos, caching). |
+| **Páginas** | `HomePage` | Componentes de nível superior que organizam Organismos para formar a visão final do usuário. |
+
+### Estilização: Tailwind CSS
+
+Utilizei o **Tailwind CSS** para um desenvolvimento ágil e responsivo.
+
+* **Utility-First:** A estilização é aplicada diretamente no JSX através de classes utilitárias, agilizando o desenvolvimento e facilitando a manutenção.
+
+### shadcn/ui
+
+Embora o projeto atual utilize componentes customizados, o conceito da biblioteca **shadcn/ui** (que oferece componentes acessíveis e estilizados baseados em Tailwind) foi uma **influência chave** no design dos nossos próprios átomos, buscando sempre a construção de interfaces elegantes e funcionais.
+
+### Consumo de APIs com HTTPS
+
+Toda a comunicação com serviços externos é feita via **protocolo HTTPS** usando o cliente **Axios**. Isso garante a **segurança** e a **integridade dos dados** trafegados. Meu foco foi em requisições **`GET`** para buscar dados de previsão do tempo, encapsulando a complexidade da API dentro de `services/openMeteo.service.js`.
+
+---
+
+## API de Clima: Open-Meteo
+
+O projeto utiliza a **Open-Meteo**, uma API de código aberto focada em dados meteorológicos.
+
+* **Dados Utilizados:** Estamos consumindo a API para obter o clima **atual** (`getCurrentWeather`) e utilizamos a API de **Geocoding** para traduzir o nome da cidade em coordenadas geográficas (latitude e longitude) necessárias para a busca do clima.
+* **Configuração:** Todas as chamadas de clima são configuradas para a **timezone `America/Sao_Paulo`** para garantir a precisão dos dados para o contexto brasileiro.
+
+---
+
+## Testes
+
+Para garantir a qualidade e prevenir regressões, o projeto utiliza o **Vitest** como runner e a **React Testing Library (RTL)** para focar em testes de funcionalidade com base no que era esperado.
