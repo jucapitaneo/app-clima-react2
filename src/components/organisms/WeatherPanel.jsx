@@ -15,7 +15,8 @@ export default function WeatherPanel() {
   async function handleSearch(city) {0
     setLoading(true);
     setError(null);
-    await fetchWeather(city, setError, setLoading, setWeather);
+    const weatherOf = await fetchWeather(city, setError, setLoading, setWeather);
+    setWeather(weatherOf)
   }
 
   function handleFavorite() {

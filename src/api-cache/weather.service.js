@@ -18,8 +18,6 @@ export async function fetchWeather(city, setError, setLoading, setWeather) {
 
       const w = await getCurrentWeather(latitude, longitude);
       const merged = { ...w, city: name, country };
-
-      setWeather(merged);
       saveCache(city, merged);
 
       return merged
