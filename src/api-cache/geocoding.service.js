@@ -1,8 +1,8 @@
-const API_URL = import.meta.env.VITE_GEOCODING_API;
+const GEOCODING_API= 'https://geocoding-api.open-meteo.com/v1/search'
 
 export async function getCoordinates(city, setError, setLoading) {
   const geoRes = await fetch(
-    `${API_URL}?name=${encodeURIComponent(city)}&count=1&language=pt&format=json`
+    `${GEOCODING_API}?name=${encodeURIComponent(city)}&count=1&language=pt&format=json`
   );
   const geo = await geoRes.json();
   if (!geo.results || geo.results.length === 0) {
