@@ -14,13 +14,15 @@ export async function fetchWeather(city, setError, setLoading, setWeather) {
     const coords = await getCoordinates(city, setError, setLoading);
     if (!coords) return;
 
-    const { latitude, longitude, name, country } = coords;
+      const { latitude, longitude, name, country } = coords;
 
       const w = await getCurrentWeather(latitude, longitude);
       const merged = { ...w, city: name, country };
 
       setWeather(merged);
       saveCache(city, merged);
+
+      return merged
     } catch (err) {
       setError('Erro ao buscar dados: ' + err.message);
     } finally {
