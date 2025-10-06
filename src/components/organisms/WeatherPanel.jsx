@@ -1,54 +1,28 @@
 import React, { useState } from 'react';
 import SearchBar from '../molecules/SearchBar';
 import WeatherSummaryCard from '../molecules/WeatherSummaryCard';
-import { getCurrentWeather } from '../../api&cache/openMeteo.service';
-import { readCache, saveCache, addFavoriteCity, getFavoriteCities } from '../../api&cache/storage.service';
+import { getCurrentWeather } from '../../api-cache/openMeteo.service';
+import { getCoordinates } from '@/api-cache/geocoding.service';
+import { fetchWeather } from '@/api-cache/weather.service';
+import { readCache, saveCache, addFavoriteCity, getFavoriteCities } from '../../api-cache/storage.service';
 
 export default function WeatherPanel() {
   const [weather, setWeather] = useState(null);
   const [loading, setLoading] = useState(false);
   const [favorites, setFavorites] = useState(getFavoriteCities());
-  const [error, setError] = useState(null); // <- estado para feedback
+  const [error, setError] = useState(null); 
 
-  async function handleSearch(city) {
+  async function handleSearch(city) {0
     setLoading(true);
-    setError(null); // limpa erros antigos
-    try {
-      const geoRes = await fetch(
-        `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=1&language=pt&format=json`
-      );
-      const geo = await geoRes.json();
-      if (!geo.results || geo.results.length === 0) {
-        setError('Cidade não encontrada.');
-        setLoading(false);
-        return;
-      }
-
-      const { latitude, longitude, name, country } = geo.results[0];
-
-      const cached = readCache(city);
-      if (cached) {
-        setWeather(cached);
-        setLoading(false);
-        return;
-      }
-
-      const w = await getCurrentWeather(latitude, longitude);
-      const merged = { ...w, city: name, country };
-
-      setWeather(merged);
-      saveCache(city, merged);
-    } catch (err) {
-      setError('Erro ao buscar dados: ' + err.message);
-    } finally {
-      setLoading(false);
-    }
+    setError(null);
+    await fetchWeather(city, setError, setLoading, setWeather);
   }
 
   function handleFavorite() {
     if (!weather) return;
     addFavoriteCity(weather.city);
     setFavorites(getFavoriteCities());
+    fetchWeather(city, setError, setLoading, setWeather)
   }
 
   return (

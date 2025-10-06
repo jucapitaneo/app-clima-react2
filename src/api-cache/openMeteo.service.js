@@ -11,7 +11,7 @@ export async function getCurrentWeather(lat, lon) {
       timezone: 'America/Sao_Paulo'
     }
   });
-  return res.data; 
+  return res.data;  
 }
 
 export async function getHourlyWeather(lat, lon) {
